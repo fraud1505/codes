@@ -1,0 +1,29 @@
+#include <reg51.h>   // Header file for 8051 microcontroller 
+// Function declaration for delay 
+void delay(void);     
+ 
+// Main function 
+void main(void) 
+{ 
+    while(1)    // Infinite loop to keep LEDs blinking continuously 
+    { 
+        P1 = 0xFF;   // Turn ON all LEDs connected to Port 1 
+        delay();     // Call delay function 
+ 
+        P1 = 0x00;   // Turn OFF all LEDs 
+        delay();     // Call delay function 
+    } 
+} 
+ 
+// Function to generate time delay 
+void delay(void) 
+{ 
+    int i, j;        // Loop variables 
+    for(i = 0; i < 1000; i++)   // Outer loop 
+    { 
+        for(j = 0; j < 100; j++)   // Inner loop 
+        { 
+            // Empty loop to create delay 
+        } 
+    } 
+} 

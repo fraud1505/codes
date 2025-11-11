@@ -1,0 +1,30 @@
+#include <reg51.h> 
+// Function declarations 
+void display(unsigned char byte); 
+void delay(); 
+void main() { 
+    P0 = 0x00;  // Connect 7-segment to Port 0 
+    P1 = 0x04;  // Optional: can be used for digit control if multiple displays 
+ 
+    while (1) { 
+        display(0xC0);  // 0 
+        display(0xF9);  // 1 
+        display(0xA4);  // 2 
+        display(0xB0);  // 3 
+        display(0x99);  // 4 
+        display(0x92);  // 5 
+        display(0x82);  // 6 
+        display(0xF8);  // 7 
+        display(0x80);  // 8 
+        display(0x90);  // 9 
+    } 
+} 
+void display(unsigned char byte) { 
+    P0 = byte;   // Send segment code to Port 0 
+    delay();     // Wait before next digit 
+} 
+void delay() { 
+    int i, j; 
+    for (i = 0; i < 500; i++) 
+        for (j = 0; j < 500; j++); 
+}

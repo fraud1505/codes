@@ -1,0 +1,43 @@
+#include <p18f4520.h>
+//#pragma config OSC = HS //Oscillator Selection
+//#pragma config WDT = OFF //Disable Watchdog timer
+//#pragma config LVP = OFF //Disable Low Voltage Programming
+//#pragma config PBADEN = OFF //Disable PORTB Analog inputs
+
+void myMsDelay (unsigned int time) 	// Definition of delay subroutine
+{
+	unsigned int i, j;
+	for (i = 0; i < time; i++)		// Loop for i time
+		for (j = 0; j < 275; j++);	// Calibrated for a 1 ms delay in MPLAB
+}
+
+void main()
+{ 
+	TRISCbits.TRISC4 = 0 ;	// Set PORTC, RC4 as output (DCM IN1)
+	TRISCbits.TRISC5 = 0 ;	// Set PORTC, RC5 as output (DCM IN2)	
+	TRISCbits.TRISC1 = 0 ;	// Set PORTC, RC1 as output (CCP2 - DCM EN1)
+   	PR2 = 0x4E;             // set PWM Frequency 4KHz  
+    CCP1CON = 0x0C;         // Configure CCP1CON as PWM mode.
+ 	T2CON = 0x07;		//Start timer 2 with prescaler 1:16
+	PORTCbits.RC4 = 1;	// Turn ON the Motor
+    PORTCbits.RC5 = 0;
+  while(1)	// Endless Loop
+	{
+		// ----------Duty Cycle 25%-----------
+		CCP1CONbits.DC1B0 = 0;
+		CCP1CONbits.DC1B1 = 1;
+		CCPR1L = 0x13;
+		myMsDelay(2000);
+	//	 ----------Duty Cycle 50%-----------
+		CCP1CONbits.DC1B0 = 0;
+		CCP1CONbits.DC1B1 = 0;
+		CCPR1L = 0x27;
+		myMsDelay(2000);
+ //----------Duty Cycle 75%-----------
+		CCP1CONbits.DC1B0 = 0;
+		CCP1CONbits.DC1B1 = 1;
+		CCPR1L = 0x3A;
+		myMsDelay(2000);
+ 	}   
+ 
+}

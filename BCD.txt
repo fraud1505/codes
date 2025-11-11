@@ -1,0 +1,23 @@
+#include <reg51.h>    // Header file for 8051 microcontroller 
+void delay();         // Function declaration 
+void main() 
+{ 
+    int i;            // Variable declaration 
+ 
+    while(1)          // Infinite loop 
+    { 
+        for(i = 0; i < 10; i++)   // Loop to count from 0 to 9 
+        { 
+            P1 = i;               // Send value of i to Port 1 (P1) 
+            delay();              // Call delay to make the count visible 
+        } 
+    } 
+} 
+void delay() 
+{ 
+    int j, k; 
+    for(j = 0; j < 1000; j++)     // Outer delay loop 
+    { 
+        for(k = 0; k < 100; k++); // Inner delay loop (semicolon important) 
+    } 
+}

@@ -1,0 +1,18 @@
+#include <reg51.h>
+void Tdelay() {
+    TMOD = 0x10;   // Timer1 in Mode 1 (16-bit timer)
+    TH1 = 0xFF;    // Load high byte
+    TL1 = 0x9A;    // Load low byte (approx delay)
+    TR1 = 1;       // Start Timer1
+    while (TF1 == 0);  // Wait until timer overflows
+    TR1 = 0;       // Stop timer
+    TF1 = 0;       // Clear overflow flag
+}
+void main() {
+    while(1) {
+        P1 = 0xFF;   // Output high (Square wave high)
+        Tdelay();
+        P1 = 0x00;   // Output low (Square wave low)
+        Tdelay();
+    }
+}

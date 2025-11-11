@@ -1,0 +1,79 @@
+#include <p18f4520.h>
+// ===== Configuration Bits =====
+#pragma config OSC = HS, PWRT = OFF, WDT = OFF, LVP = OFF, DEBUG = OFF, PBADEN = OFF
+#define _XTAL_FREQ 20000000    // 20 MHz Crystal Frequency
+// ===== LCD Pin Definitions =====
+#define LCD_DATA PORTD
+#define RS PORTEbits.RE0
+#define RW PORTEbits.RE1
+#define EN PORTEbits.RE2
+// ===== Function Prototypes =====
+void LCD_Init(void);
+void LCD_Cmd(unsigned char cmd);
+void LCD_Write(unsigned char data);
+void LCD_Write_String(const char *str);
+void MSDelay(unsigned int time);
+// ===== MAIN PROGRAM =====
+void main(void)
+{
+    ADCON1 = 0x0F;   // Configure PORTE as digital I/O
+    TRISD = 0x00;    // PORTD as output (LCD Data)
+    TRISE = 0x00;    // PORTE as output (LCD Control)
+    LCD_DATA = 0x00;
+    PORTE = 0x00;
+    LCD_Init();        // Initialize LCD
+    MSDelay(50);       // Small delay
+    LCD_Write_String("LOGSUN SYSTEM");   // First line
+    LCD_Cmd(0xC0);                      // Move to second line
+    LCD_Write_String("PIC18F4520");     // Second line
+    while(1);          // Infinite loop
+}
+
+// ===== LCD INITIALIZATION =====
+void LCD_Init(void)
+{
+    MSDelay(20);
+    LCD_Cmd(0x38);     // 8-bit mode, 2-line, 5x7 font
+    MSDelay(5);
+    LCD_Cmd(0x0C);     // Display ON, Cursor OFF
+    MSDelay(5);
+    LCD_Cmd(0x01);     // Clear display
+    MSDelay(5);
+    LCD_Cmd(0x80);     // Move cursor to 1st line, position 0
+}
+// ===== SEND COMMAND TO LCD =====
+void LCD_Cmd(unsigned char cmd)
+{
+    LCD_DATA = cmd;
+    RS = 0;
+    RW = 0;
+    EN = 1;
+    MSDelay(2);
+    EN = 0;
+}
+// ===== SEND DATA TO LCD =====
+void LCD_Write(unsigned char data)
+{
+    LCD_DATA = data;
+    RS = 1;
+    RW = 0;
+    EN = 1;
+    MSDelay(2);
+    EN = 0;
+}
+// ===== SEND STRING TO LCD =====
+void LCD_Write_String(const char *str)
+{
+    while(*str)
+    {
+        LCD_Write(*str++);
+        MSDelay(2);
+    }
+}
+// ===== SIMPLE DELAY FUNCTION =====
+void MSDelay(unsigned int time)
+{
+    unsigned int i, j;
+    for(i = 0; i < time; i++)
+        for(j = 0; j < 710; j++);
+}

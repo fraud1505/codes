@@ -1,0 +1,68 @@
+#include <p18F4520.h>
+// ======== CONFIGURATION BITS ========
+#pragma config OSC = HS        // High-Speed Oscillator
+#pragma config PWRT = OFF      // Power-up Timer disabled
+#pragma config WDT = OFF       // Watchdog Timer disabled
+#pragma config LVP = OFF       // Low-voltage programming disabled
+#pragma config DEBUG = OFF     // Debug mode disabled
+#define _XTAL_FREQ 20000000    // 20 MHz crystal frequency
+// ======== PIN DEFINITIONS ========
+#define Relay   PORTDbits.RD2
+#define Buzzer  PORTDbits.RD3
+#define SW1     PORTDbits.RD0
+#define SW2     PORTDbits.RD1
+#define LD1     PORTDbits.RD4
+#define LD2     PORTDbits.RD5
+#define LD3     PORTDbits.RD6
+#define LD4     PORTDbits.RD7
+// ======== FUNCTION DECLARATIONS ========
+void msdelay(unsigned int itime);
+void Right(void);
+void Left(void);
+// ======== MAIN FUNCTION ========
+void main(void) {
+    TRISD = 0x03;     // RD0, RD1 as input; RD2–RD7 as output
+    ADCON1 = 0x0F;    // Configure PORTD as digital I/O
+    PORTD = 0x00;     // Clear PORTD outputs
+    Relay = 0;
+    Buzzer = 0;
+    while(1) {
+        if(SW1 == 0) {    // Switch 1 pressed → Right direction
+            Right();
+        }
+        else if(SW2 == 0) {   // Switch 2 pressed → Left direction
+            Left();
+        }
+    }
+}
+// ======== RIGHT SEQUENCE ========
+void Right(void) {
+    Relay = 1;
+    Buzzer = 1;
+    while(SW2 != 0) {      // Run until SW2 is pressed
+        LD1 = 1; LD2 = 0; LD3 = 0; LD4 = 0; msdelay(100);
+        LD1 = 0; LD2 = 1; LD3 = 0; LD4 = 0; msdelay(100);
+        LD1 = 0; LD2 = 0; LD3 = 1; LD4 = 0; msdelay(100);
+        LD1 = 0; LD2 = 0; LD3 = 0; LD4 = 1; msdelay(100);
+        if(SW2 == 0) break;   // Stop if SW2 pressed
+    }
+    Buzzer = 0;
+}
+// ======== LEFT SEQUENCE ========
+void Left(void) {
+    Relay = 0;
+    Buzzer = 0;
+    while(SW1 != 0) {      // Run until SW1 is pressed
+        LD1 = 0; LD2 = 0; LD3 = 0; LD4 = 1; msdelay(100);
+        LD1 = 0; LD2 = 0; LD3 = 1; LD4 = 0; msdelay(100);
+        LD1 = 0; LD2 = 1; LD3 = 0; LD4 = 0; msdelay(100);
+        LD1 = 1; LD2 = 0; LD3 = 0; LD4 = 0; msdelay(100);
+        if(SW1 == 0) break;   // Stop if SW1 pressed
+    }
+}
+// ======== DELAY FUNCTION ========
+void msdelay(unsigned int itime) {
+    unsigned int i, j;
+    for(i = 0; i < itime; i++)
+        for(j = 0; j < 1275; j++);
+}

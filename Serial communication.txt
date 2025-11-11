@@ -1,0 +1,55 @@
+#include <p18F4520.h>
+
+//Configuration bit setting//
+
+#pragma config OSC=HS
+#pragma config PWRT=OFF
+#pragma config WDT=OFF
+#pragma config DEBUG=OFF, LVP=OFF 
+
+#define _XTAL_FREQ 20000000
+
+void Transmit_String(unsigned char *string)
+{
+    unsigned char i=0;
+ 	for(i=0;string[i]!='\0';i++) //loop till end of the string
+ 	{
+        while(PIR1bits.TXIF == 0);
+        TXREG = string[i];
+        
+    }	
+}
+ 
+
+unsigned char MSG1[] = {"UART COMMUNICATION \r\n"};
+unsigned char MSG2[] = {"Received Data \r\n"};
+unsigned char MSG3[] = {" \r\n"};
+void main(void)
+{
+    unsigned char j=0;
+    unsigned char RX_DATA[10];
+    
+    TRISCbits.TRISC7 = 1;   // RXD as Input
+    TRISCbits.TRISC6 = 0;   // TXD as Output
+    RCSTA = 0x90;
+    TXSTA = 0x24;
+    BAUDCON = 0x08;
+    SPBRG = 0x0A;
+    SPBRGH = 0x02;
+           
+    Transmit_String (MSG1);
+  
+    for (j=0; j<6 ; j++)
+    {
+        while(PIR1bits.RCIF == 0);
+        RX_DATA[j] = RCREG;
+    }
+
+    RX_DATA[6] = '\0';
+    Transmit_String (MSG2);
+    Transmit_String (RX_DATA);
+   Transmit_String (MSG3);
+    while(1);
+  
+    
+}

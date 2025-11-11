@@ -1,0 +1,23 @@
+#include <reg51.h>   // Header file for 8051 microcontroller 
+void delay();        // Function prototype 
+void main() 
+{ 
+    unsigned char mynum[] = "0123456ABC";  // Character array (string) 
+    unsigned char i;                       // Loop variable 
+    while(1) 
+    { 
+        for(i = 0; i < 10; i++)            // Loop through each character 
+        { 
+            P1 = mynum[i];                 // Send ASCII value to Port 1 
+            delay();                       // Wait for some time 
+        } 
+    } 
+} 
+void delay() 
+{ 
+    int j, k; 
+    for(j = 0; j < 1000; j++) 
+    { 
+        for(k = 0; k < 100; k++); 
+    } 
+} 
