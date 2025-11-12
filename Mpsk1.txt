@@ -1,0 +1,27 @@
+clc;
+ clear all;
+ close all;
+ Eb_No_dB = 0:0.5:35;
+ M_4 = 4;
+ BER_4 = berawgn(Eb_No_dB,'psk',M_4,'nondiff');
+ M_8 = 8;
+ BER_8 = berawgn(Eb_No_dB,'psk',M_8,'nondiff');
+ M_16 = 16;
+ BER_16 = berawgn(Eb_No_dB,'psk',M_16,'nondiff');
+ M_32 = 32;
+ BER_32 = berawgn(Eb_No_dB,'psk',M_32,'nondiff');
+ figure(1);
+ semilogy(Eb_No_dB, BER_4, 'y');
+ hold on;
+ semilogy(Eb_No_dB, BER_8, 'k');
+ hold on;
+ semilogy(Eb_No_dB, BER_16, 'm');
+ hold on;
+ semilogy(Eb_No_dB, BER_32, 'b');
+ grid on;
+ axis([0 35 10^-6 1])
+ legend('QPSK AWGN channel','8PSK AWGN channel','16PSK AWGN channel','32PSK 
+AWGN channel');
+ xlabel('Eb/No');
+ ylabel('BER');
+ title('MPSK Modulation over Gaussian noise');

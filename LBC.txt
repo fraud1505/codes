@@ -1,0 +1,38 @@
+clc; 
+clear all; 
+close all; 
+n=input('Enter n :'); 
+k=input('Enter K:'); 
+d=input('Enter data :'); 
+G=input('Enter generator matrix:'); 
+c=d*G; 
+C=rem(c,2); 
+disp('Data is :'); 
+disp(d); 
+disp('Generator matrix is :'); 
+disp(G); 
+disp('Code is :'); 
+disp(C); 
+%Decoding of LBC 
+p=input('Enter parity matrix :'); 
+h=horzcat(p.',eye(n-k)); 
+ec1=vertcat(zeros(1,n), eye(n)); 
+ec2=vertcat(zeros(1,n-k), h.'); 
+disp('ERROR DECODING TABLE :'); 
+ec=horzcat(ec1,ec2); 
+disp(ec); 
+r=input('Enter the received message :'); 
+s=mod(r*h.',2); 
+disp('SYNDROME IS (S):'); 
+disp(s); 
+if s==zeros(1,n-k) 
+    disp('NO ERROR IN RECEIVED MESSAGE'); 
+else 
+    disp('ERROR IN BIT'); 
+    d=find(ismember(ec2,s,'rows')); 
+    disp(d-1); 
+    r(d-1)=(r(d-1)+1); 
+    disp('CORRECTED CODEWORD IS :'); 
+    R=rem(r,2); 
+    disp(R); 
+end 

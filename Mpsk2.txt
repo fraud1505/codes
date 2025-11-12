@@ -1,0 +1,28 @@
+clear all; 
+close all; 
+clc;  
+% DC-Expt-04(b)  
+% M-ary PSK Modulation over Gaussian noise  
+SNR = 10; k = input('Enter no. of bits per 
+symbol: ');  
+M = 2^k; % M-ary modulation order  
+% Generate random data and modulate data = randi([0 M
+1], 1000, 1); y1 = pskmod(data, M);              
+% Modulated 
+signal y1n = awgn(y1, SNR, 'measured');   % Add Gaussian 
+noise  
+% Plot modulated signal with blue dots figure; h1 = scatterplot(y1); 
+set(gcf, 'Color', 'w');             
+'Color', 'w');            
+% Set figure background to white set(gca, 
+ % Set axes background to white set(gca, 'XColor', 
+'k', 'YColor', 'k'); % Set axis color to black set(findobj(h1, 'Type', 'line'), 
+'MarkerEdgeColor', 'b'); % Blue dots title('PSK Modulated Signal', 
+'Color', 'k');  
+% Plot noisy signal with red dots figure; h2 = scatterplot(y1n); set(gcf, 
+'Color', 'w');            
+'w');             
+ % Set figure background to white set(gca, 'Color', 
+% Set axes background to white set(gca, 'XColor', 'k', 
+'YColor', 'k'); % Set axis color to black set(findobj(h2, 'Type', 'line'), 
+'MarkerEdgeColor', 'r'); % Red dots title('Noisy PSK Signal', 'Color', 'k'); 

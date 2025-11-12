@@ -1,0 +1,22 @@
+clc;
+ clear all;
+ close all;
+ Eb_No_dB = 0:0.5:35;
+ M = 4;
+ BER_4 = berawgn (Eb_No_dB,"qam", M, "nondiff");
+ M_16=16;
+ BER_16 = berawgn (Eb_No_dB,'qam', M_16, 'nondiff');
+ M_64 = 64;
+ BER_64 = berawgn (Eb_No_dB,'qam', M_64, 'nondiff');
+ figure(1);
+ semilogy(Eb_No_dB, BER_4, 'g');
+ hold on;
+ semilogy(Eb_No_dB, BER_16, 'k');
+ hold on;
+ semilogy(Eb_No_dB, BER_64, 'm');
+ grid on
+ axis([0 35 1e-5 1]);
+ legend( '4QAM AWGN channel', '16QAM AWGN channel', '64QAM AWGN channel');
+ xlabel('Eb/No');
+ ylabel('BER');
+ title('M-QAM Modulation over Gaussian noise');
