@@ -1,0 +1,23 @@
+% Constellation diagram for M values
+
+clc;
+clear;
+close all;
+
+% Running the program for three values of M
+
+M = [4, 16,64];
+SNR = 10;
+
+for i = 1:length(M)
+    x = 0:M(i)-1 ;
+    N = 1;
+    y = qammod(x,M(i));
+    yn = awgn(y,SNR,'measured');
+end
+figure;
+scatterplot(y);
+title(['Constellation diagram for M = ', num2str(M(i)),'(Without Noise']);
+figure;
+scatterplot(yn);
+title(['Constellation diagram for M = ', num2str(M(i)),'(With AWGN Noise, SNR = ' , num2str(SNR), ' db)']);
